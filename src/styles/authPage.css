@@ -1,0 +1,14 @@
+.authContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loginForm {
+    display: block;
+
+}
+
+.error {
+    border:  1px solid red;
+}
