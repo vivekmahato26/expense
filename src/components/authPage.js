@@ -7,6 +7,9 @@ const AuthPage = () => {
     const [registerData,setRegisterData] = useState()
     const [registerError,setRegisterError] = useState()
     const registerRef = useRef();
+    const [loginData,setLoginData] = useState()
+    const [loginError,setLoginError] = useState()
+    const loginRef = useRef();
     const handleRegister = async(event) => {
         event.preventDefault();
         const regForm = registerRef.current;
@@ -16,36 +19,56 @@ const AuthPage = () => {
         body.phone = regForm.phone.value;
         body.password = regForm.password.value;
         body.access = regForm.access.value;
-
         try {
             
-            const data =  await axios.post(baseUrl+"users/register",body);
-            console.log(data);
-            setRegisterData(data);
-            if(data.data._id) {
+            const response =  await axios.post(baseUrl+"users/register",body);
+            console.log(response);
+            setRegisterData(response);
+            if(response.data._id) {
                 setRegisterError(null);
             } else {
-                setRegisterError(data.data);
+                setRegisterError(response.data);
             }
         } catch (error) {
             console.log(error);
         }
-
+        
+    }
+    const handleLogin = async(event) => {
+        event.preventDefault();
+        const regForm = registerRef.current;
+        const body = {};
+        body.email = regForm.email.value;
+        body.password = regForm.password.value;
+        try {
+            
+            const response =  await axios.post(baseUrl+"users/login",body);
+            console.log(response);
+            setLoginData(response);
+            if(response.data.token) {
+                setLoginError(null);
+            } else {
+                setLoginError(response.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
         
     }
     return (
         <div className="authContainer">
-            {/* <form className="loginForm">
+            <form ref={loginRef} onSubmit={(event) => handleLogin(event)} className="loginForm">
                 <div>
                     <label htmlFor="email">Email</label>
-                    <input type="email" name="email" />
+                    <input className={registerError ? "error": ""} type="email" name="email" />
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
-                    <input type="password" name="password" />
+                    <input className={registerError ? "error": ""} type="password" name="password" />
                 </div>
+                {loginError && <p>{loginError}</p>}
                 <button type="submit">Login</button>
-            </form> */}
+            </form>
             <form ref={registerRef} className="registerForm" onSubmit={(event) => handleRegister(event)}>
                 <div>
                     <label htmlFor="name">Name</label>
@@ -54,7 +77,7 @@ const AuthPage = () => {
                 <div>
                     <label htmlFor="email">Email</label>
                     <input className={registerError ? "error": ""} type="email" name="email" />
-                    {registerError && <span>{registerError}</span>}
+                    {registerError && <p>{registerError}</p>}
                 </div>
                 <div>
                     <label htmlFor="phone">Phone</label>
