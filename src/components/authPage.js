@@ -46,6 +46,10 @@ const AuthPage = () => {
             console.log(response);
             setLoginData(response);
             if(response.data.token) {
+                const keys = Object.keys(response.data);
+                keys.forEach(e => {
+                    localStorage.setItem(e,response.data[e]);
+                })
                 setLoginError(null);
             } else {
                 setLoginError(response.data);
